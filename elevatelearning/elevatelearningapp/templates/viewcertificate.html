@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Completion - Elevate Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto&display=swap');
+        .certificate-border {
+            border: 15px solid #4F46E5;
+            background: linear-gradient(to bottom right, #f0f9ff, #e0f2fe);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{% url 'index' %}">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg width="300" height="100" viewBox="0 0 300 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Book Rotated to Face Left -->
+                                <path d="M70 50 L30 50 C20 50 20 70 30 70 L70 70" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+                                <path d="M70 30 L30 30 C20 30 20 50 30 50 L70 50" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+                                <!-- Pages on Both Sides -->
+                                <path d="M65 55 L65 65 M55 55 L55 65 M45 55 L45 65 M35 55 L35 65" stroke="#4F46E5" stroke-width="2"/>
+                                <path d="M65 35 L65 45 M55 35 L55 45 M45 35 L45 45 M35 35 L35 45" stroke="#4F46E5" stroke-width="2"/>
+                                
+                                 <!-- Text -->
+                                <text x="90" y="42" font-family="Inter, sans-serif" font-weight="700" font-size="28" fill="#111827">ELEVATE</text>
+                                <text x="92" y="72" font-family="Inter, sans-serif" font-weight="500" font-size="24" fill="#111827">LEARNING</text>
+                              </svg>
+                        </div>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <a href="{% url 'mycourse' %}" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                        Back to My Courses
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Certificate Content -->
+    <div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto certificate-border p-8 rounded-lg shadow-2xl">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-indigo-800 mb-2" style="font-family: 'Playfair Display', serif;">
+                    Certificate of Completion
+                </h1>
+                <p class="text-lg text-gray-600">This certificate is proudly presented to</p>
+            </div>
+
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2" style="font-family: 'Playfair Display', serif;">
+                    {{ request.user.get_full_name|default:request.user.username }}
+                </h2>
+                <p class="text-gray-600">for successfully completing</p>
+                <h3 class="text-2xl font-semibold text-indigo-700 mt-2">{{ course.title }}</h3>
+            </div>
+
+            <div class="flex justify-between items-center mt-12 mb-8">
+                <div class="text-center">
+                    <div class="h-24 w-48 border-t-2 border-gray-300 mx-auto"></div>
+                    <p class="text-sm text-gray-500 mt-2">Date Completed</p>
+                    <p class="font-medium">{{ completion_date|date:"F j, Y" }}</p>
+                </div>
+                <div class="text-center">
+                    <div class="h-24 w-48 border-t-2 border-gray-300 mx-auto"></div>
+                    <p class="text-sm text-gray-500 mt-2">Certificate ID</p>
+                    <p class="font-mono font-medium">{{ certificate_id }}</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <p class="text-sm text-gray-500 mb-4">Verified by Elevate Learning</p>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <button onclick="window.print()" class="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                Print Certificate
+            </button>
+            <a href="#" class="ml-4 px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700">
+                Share on LinkedIn
+            </a>
+        </div>
+    </div>
+</body>
+</html>

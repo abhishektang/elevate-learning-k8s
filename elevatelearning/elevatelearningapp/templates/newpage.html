@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Page - Elevate Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation (same as before) -->
+    <nav class="bg-white shadow-sm">
+        <div class="flex justify-between items-center">
+            <a href="{% url 'index' %}">
+                <div class="flex-shrink-0 flex items-center">
+                    <svg width="300" height="100" viewBox="0 0 300 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Book Rotated to Face Left -->
+                        <path d="M70 50 L30 50 C20 50 20 70 30 70 L70 70" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+                        <path d="M70 30 L30 30 C20 30 20 50 30 50 L70 50" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+                        <!-- Pages on Both Sides -->
+                        <path d="M65 55 L65 65 M55 55 L55 65 M45 55 L45 65 M35 55 L35 65" stroke="#4F46E5" stroke-width="2"/>
+                        <path d="M65 35 L65 45 M55 35 L55 45 M45 35 L45 45 M35 35 L35 45" stroke="#4F46E5" stroke-width="2"/>
+                        
+                         <!-- Text -->
+                        <text x="90" y="42" font-family="Inter, sans-serif" font-weight="700" font-size="28" fill="#111827">ELEVATE</text>
+                        <text x="92" y="72" font-family="Inter, sans-serif" font-weight="500" font-size="24" fill="#111827">LEARNING</text>
+                      </svg>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+     <!-- Main Content -->
+     <div class="py-10">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Display messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-4 px-4 py-3 rounded-md {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <div class="px-4 py-6 sm:px-0">
+                <div class="border-4 border-dashed border-gray-200 rounded-lg min-h-96">
+                    <!-- Page header -->
+                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Create New Page</h3>
+                                <p class="mt-1 max-w-2xl text-sm text-gray-500">Add a new page to "{{ course.title }}" course</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Create Page Form -->
+                    <div class="px-4 py-5 sm:p-6">
+                        <form method="POST" action="{% url 'newpage' course.course_id %}">
+                            {% csrf_token %}
+                            <div class="space-y-6">
+                                <!-- Title Input -->
+                                <div>
+                                    <label for="title" class="block text-sm font-medium text-gray-700">Page Title</label>
+                                    <div class="mt-1">
+                                        <input type="text" name="title" id="title" required value="{{ page.page_title|default_if_none:'' }}"
+                                               class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                                               placeholder="Enter page title">
+                                    </div>
+                                </div>
+                                
+                                <!-- Description/Content Input -->
+                                <div>
+                                    <label for="content" class="block text-sm font-medium text-gray-700">Page Content</label>
+                                    <div class="mt-1">
+                                        <textarea id="content" name="content" rows="10" required
+                                                  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                                                  placeholder="Write the content for this page...">{{ page.page_description|default_if_none:'' }}</textarea>
+                                    </div>
+                                    <p class="mt-2 text-sm text-gray-500">Write the content for this page. You can use Markdown formatting.</p>
+                                </div>
+                                
+                                <!-- Form Actions -->
+                                <div class="flex justify-end space-x-3 pt-4">
+                                    <a href="{% url 'addpage' course.course_id %}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Cancel
+                                    </a>
+                                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        {% if is_edit %}Update{% else %}Create{% endif %} Page
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

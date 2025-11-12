@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.page_title }} - Elevate Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{% url 'index' %}">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg width="300" height="100" viewBox="0 0 300 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Book Rotated to Face Left -->
+                                <path d="M70 50 L30 50 C20 50 20 70 30 70 L70 70" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+                                <path d="M70 30 L30 30 C20 30 20 50 30 50 L70 50" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+                                <!-- Pages on Both Sides -->
+                                <path d="M65 55 L65 65 M55 55 L55 65 M45 55 L45 65 M35 55 L35 65" stroke="#4F46E5" stroke-width="2"/>
+                                <path d="M65 35 L65 45 M55 35 L55 45 M45 35 L45 45 M35 35 L35 45" stroke="#4F46E5" stroke-width="2"/>
+                                
+                                <!-- Text -->
+                                <text x="90" y="42" font-family="Inter, sans-serif" font-weight="700" font-size="28" fill="#111827">ELEVATE</text>
+                                <text x="92" y="72" font-family="Inter, sans-serif" font-weight="500" font-size="24" fill="#111827">LEARNING</text>
+                            </svg>
+                        </div>
+                    </a>
+                </div>
+                <div class="flex items-center overflow-hidden max-w-[50%] sm:max-w-none">
+                    <div class="truncate">
+                        <span class="text-sm font-medium text-gray-500 truncate">{{ course.title }}</span>
+                        <span class="mx-2 text-gray-300 hidden sm:inline">|</span>
+                        <span class="text-sm font-medium text-gray-500 hidden sm:inline">Page {{ page.page_no }} of {{ course.pages.count }}</span>
+                    </div>
+                    <!-- Mobile-only page indicator -->
+                    <span class="text-sm font-medium text-gray-500 sm:hidden ml-2">{{ page.page_no }}/{{ course.pages.count }}</span>
+                </div>
+                <div class="hidden sm:flex items-center space-x-2">
+                    <!-- Back to My Courses Button -->
+                    <a href="{% url 'mycourse' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        My Courses
+                    </a>
+                    {% if previous_page %}
+                    <a href="{% url 'coursepage' previous_page.coursepage_id %}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Previous Page
+                    </a>
+                    {% endif %}
+                    {% if next_page %}
+                    <a href="{% url 'coursepage' next_page.coursepage_id %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Next Page
+                    </a>
+                    {% else %}
+                    <a href="{% url 'mycourse' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Complete Course
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="-mr-2 flex items-center sm:hidden">
+                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <!-- Hamburger icon -->
+                        <svg class="block h-6 w-6" id="menu-open-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <!-- Close icon (hidden by default) -->
+                        <svg class="hidden h-6 w-6" id="menu-close-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div class="sm:hidden" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1">
+                <!-- Back to My Courses Button -->
+                <a href="{% url 'mycourse' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    My Courses
+                </a>
+                {% if previous_page %}
+                <a href="{% url 'coursepage' previous_page.coursepage_id %}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Previous Page
+                </a>
+                {% endif %}
+                {% if next_page %}
+                <a href="{% url 'coursepage' next_page.coursepage_id %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Next Page
+                </a>
+                {% else %}
+                <a href="{% url 'mycourse' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    Complete Course
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="py-6">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Course Content -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+                <div class="px-4 py-5 sm:px-6">
+                    <h1 class="text-2xl font-bold text-gray-900">{{ page.page_title }}</h1>
+                </div>
+                <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+                    <div class="prose max-w-none px-4 py-3 sm:px-6">
+                        {{ page.page_description|linebreaks }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- In the Social Interaction Section -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Community Interaction</h3>
+                </div>
+                <div class="px-4 py-5 sm:p-6">
+                    <!-- Like Form -->
+                    <div class="flex items-center mb-6">
+                        <form method="post" action="{% url 'toggle_like' page.coursepage_id %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="flex items-center mr-4 focus:outline-none">
+                                <svg class="w-6 h-6 mr-1" fill="{% if user_has_liked %}red{% else %}none{% endif %}" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                                <span>{{ like_count }}</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Share Buttons -->
+                    <div class="flex space-x-2">
+                        <form method="post" action="{% url 'record_share' page.coursepage_id %}" class="inline">
+                            {% csrf_token %}
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                            target="_blank" 
+                            class="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200"
+                            onclick="this.closest('form').submit();">
+                                Facebook
+                            </a>
+                        </form>
+                        <form method="post" action="{% url 'record_share' page.coursepage_id %}" class="inline">
+                            {% csrf_token %}
+                            <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20course%20page%20on%20Elevate%20Learning:%20{{ page.page_title|urlencode }}&url={{ request.build_absolute_uri }}" 
+                            target="_blank" 
+                            class="p-2 rounded-full bg-blue-100 text-blue-400 hover:bg-blue-200"
+                            onclick="this.closest('form').submit();">
+                                Twitter
+                            </a>
+                        </form>
+                    </div>
+                    
+                    <!-- Comments Section -->
+                    <div class="mt-6">
+                        <h4 class="text-md font-medium text-gray-900 mb-4">Comments ({{ comments.count }})</h4>
+                        
+                        <div class="space-y-4 mb-4">
+                            {% for comment in comments %}
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="font-medium">{{ comment.user.username }}</span>
+                                    <span class="text-xs text-gray-500">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+                                </div>
+                                <p class="text-gray-700">{{ comment.text }}</p>
+                            </div>
+                            {% empty %}
+                            <p class="text-gray-500">No comments yet. Be the first to comment!</p>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if request.user.is_authenticated %}
+                        <form method="post" action="{% url 'add_comment' page.coursepage_id %}">
+                            {% csrf_token %}
+                            <textarea name="text" rows="3" class="w-full border rounded-md p-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add your comment..." required></textarea>
+                            <button type="submit" class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Post Comment
+                            </button>
+                        </form>
+                        {% else %}
+                        <p class="text-gray-500">
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="text-indigo-600 hover:text-indigo-800">Sign in</a> to leave a comment
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu functionality
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuOpenIcon = document.getElementById('menu-open-icon');
+            const menuCloseIcon = document.getElementById('menu-close-icon');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                this.setAttribute('aria-expanded', !isExpanded);
+                mobileMenu.classList.toggle('hidden');
+                
+                // Toggle between hamburger and close icons
+                menuOpenIcon.classList.toggle('hidden');
+                menuCloseIcon.classList.toggle('hidden');
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                    mobileMenu.classList.add('hidden');
+                    menuOpenIcon.classList.remove('hidden');
+                    menuCloseIcon.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

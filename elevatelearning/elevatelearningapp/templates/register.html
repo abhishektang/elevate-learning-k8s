@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Elevate Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        educator: '#4F46E5',  // Indigo
+                        learner: '#10B981'    // Emerald
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <a href="{% url 'index' %}">
+                <div class="flex-shrink-0 flex items-center">
+                    <svg width="300" height="100" viewBox="0 0 300 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- SVG content remains the same -->
+                    </svg>
+                </div>
+            </a>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Create Your Account
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Join Elevate Learning as an educator or learner
+            </p>
+        </div>
+
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <!-- Role Selector -->
+                <div class="mb-6">
+                    <div class="flex rounded-md shadow-sm">
+                        <button id="educator-btn" type="button"
+                                class="flex-1 py-2 px-4 border border-educator bg-educator text-white text-sm font-medium rounded-l-md">
+                            Educator
+                        </button>
+                        <button id="learner-btn" type="button"
+                                class="flex-1 py-2 px-4 border border-learner bg-white text-learner text-sm font-medium rounded-r-md">
+                            Learner
+                        </button>
+                    </div>
+                    <p id="role-description" class="mt-2 text-xs text-gray-500 text-center">
+                        Educators can create and manage courses
+                    </p>
+                </div>
+
+                <!-- Registration Form -->
+                <form id="register-form" class="space-y-6" method="POST" action="{% url 'register' %}">
+                    <input type="hidden" id="user-role" name="role" value="educator">
+                    
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                        <strong>Error!</strong> Please correct the following:
+                        <ul class="mt-1 list-disc list-inside">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <!-- Form fields remain the same as your original Django form -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">
+                            Email address
+                        </label>
+                        <div class="mt-1">
+                            <input id="email" name="email" type="email" autocomplete="email" required 
+                                   value="{{ form.data.email }}"
+                                   class="appearance-none block w-full px-3 py-2 border {% if form.errors.email %}border-red-500{% else %}border-gray-300{% endif %} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-educator focus:border-educator sm:text-sm">
+                            {% if form.errors.email %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.errors.email.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="firstname" class="block text-sm font-medium text-gray-700">
+                            First Name
+                        </label>
+                        <div class="mt-1">
+                            <input id="firstname" name="firstname" type="text" autocomplete="given-name" required 
+                                   value="{{ form.data.firstname }}"
+                                   class="appearance-none block w-full px-3 py-2 border {% if form.errors.firstname %}border-red-500{% else %}border-gray-300{% endif %} rounded-md shadow-sm placeholder-gray-400 focus:outline-none {% if form.data.role == 'learner' %}focus:ring-learner focus:border-learner{% else %}focus:ring-educator focus:border-educator{% endif %} sm:text-sm">
+                            {% if form.errors.firstname %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.errors.firstname.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="surname" class="block text-sm font-medium text-gray-700">
+                            Surname
+                        </label>
+                        <div class="mt-1">
+                            <input id="surname" name="surname" type="text" autocomplete="family-name" required 
+                                   value="{{ form.data.surname }}"
+                                   class="appearance-none block w-full px-3 py-2 border {% if form.errors.surname %}border-red-500{% else %}border-gray-300{% endif %} rounded-md shadow-sm placeholder-gray-400 focus:outline-none {% if form.data.role == 'learner' %}focus:ring-learner focus:border-learner{% else %}focus:ring-educator focus:border-educator{% endif %} sm:text-sm">
+                            {% if form.errors.surname %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.errors.surname.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="mobile_no" class="block text-sm font-medium text-gray-700">
+                            Mobile Number (optional)
+                        </label>
+                        <div class="mt-1">
+                            <input id="mobile_no" name="mobile_no" type="tel" autocomplete="tel" 
+                                   value="{{ form.data.mobile_no }}"
+                                   class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none {% if form.data.role == 'learner' %}focus:ring-learner focus:border-learner{% else %}focus:ring-educator focus:border-educator{% endif %} sm:text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password1" class="block text-sm font-medium text-gray-700">
+                            Password
+                        </label>
+                        <div class="mt-1">
+                            <input id="password1" name="password1" type="password" autocomplete="new-password" required 
+                                   class="appearance-none block w-full px-3 py-2 border {% if form.errors.password1 %}border-red-500{% else %}border-gray-300{% endif %} rounded-md shadow-sm placeholder-gray-400 focus:outline-none {% if form.data.role == 'learner' %}focus:ring-learner focus:border-learner{% else %}focus:ring-educator focus:border-educator{% endif %} sm:text-sm">
+                            {% if form.errors.password1 %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.errors.password1.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password2" class="block text-sm font-medium text-gray-700">
+                            Confirm Password
+                        </label>
+                        <div class="mt-1">
+                            <input id="password2" name="password2" type="password" autocomplete="new-password" required 
+                                   class="appearance-none block w-full px-3 py-2 border {% if form.errors.password2 %}border-red-500{% else %}border-gray-300{% endif %} rounded-md shadow-sm placeholder-gray-400 focus:outline-none {% if form.data.role == 'learner' %}focus:ring-learner focus:border-learner{% else %}focus:ring-educator focus:border-educator{% endif %} sm:text-sm">
+                            {% if form.errors.password2 %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.errors.password2.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input id="terms" name="terms" type="checkbox" required 
+                               class="h-4 w-4 {% if form.data.role == 'learner' %}text-learner focus:ring-learner{% else %}text-educator focus:ring-educator{% endif %} border-gray-300 rounded">
+                        <label for="terms" class="ml-2 block text-sm text-gray-900">
+                            I agree to the <a href="#" class="font-medium {% if form.data.role == 'learner' %}text-learner hover:text-learner/80{% else %}text-educator hover:text-educator/80{% endif %}">Terms and Conditions</a>
+                        </label>
+                        {% if form.errors.terms %}
+                            <p class="ml-2 text-sm text-red-600">{{ form.errors.terms.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <button type="submit" id="submit-btn"
+                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-educator hover:bg-educator/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-educator">
+                            Create Educator Account
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Already have an account? 
+                        <a href="{% url 'login' %}" id="login-link" class="font-medium text-educator hover:text-educator/80">
+                            Sign in
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Role switching functionality
+        const educatorBtn = document.getElementById('educator-btn');
+        const learnerBtn = document.getElementById('learner-btn');
+        const roleInput = document.getElementById('user-role');
+        const submitBtn = document.getElementById('submit-btn');
+        const loginLink = document.getElementById('login-link');
+        const roleDescription = document.getElementById('role-description');
+
+        // Set initial state based on form data if available
+        const initialRole = "{{ form.data.role|default:'educator' }}";
+        if (initialRole === 'learner') {
+            switchToLearner();
+        }
+
+        educatorBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            switchToEducator();
+        });
+
+        learnerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            switchToLearner();
+        });
+
+        function switchToEducator() {
+            // Update buttons
+            educatorBtn.classList.remove('bg-white', 'text-educator', 'border-educator');
+            educatorBtn.classList.add('bg-educator', 'text-white');
+            learnerBtn.classList.remove('bg-learner', 'text-white');
+            learnerBtn.classList.add('bg-white', 'text-learner', 'border-learner');
+            
+            // Update form fields
+            roleInput.value = 'educator';
+            submitBtn.textContent = 'Create Educator Account';
+            roleDescription.textContent = 'Educators can create and manage courses';
+            
+            // Update button colors
+            submitBtn.classList.remove('bg-learner', 'hover:bg-learner/90', 'focus:ring-learner');
+            submitBtn.classList.add('bg-educator', 'hover:bg-educator/90', 'focus:ring-educator');
+            
+            // Update login link
+            loginLink.classList.remove('text-learner', 'hover:text-learner/80');
+            loginLink.classList.add('text-educator', 'hover:text-educator/80');
+        }
+
+        function switchToLearner() {
+            // Update buttons
+            learnerBtn.classList.remove('bg-white', 'text-learner', 'border-learner');
+            learnerBtn.classList.add('bg-learner', 'text-white');
+            educatorBtn.classList.remove('bg-educator', 'text-white');
+            educatorBtn.classList.add('bg-white', 'text-educator', 'border-educator');
+            
+            // Update form fields
+            roleInput.value = 'learner';
+            submitBtn.textContent = 'Create Learner Account';
+            roleDescription.textContent = 'Learners can access and complete courses';
+            
+            // Update button colors
+            submitBtn.classList.remove('bg-educator', 'hover:bg-educator/90', 'focus:ring-educator');
+            submitBtn.classList.add('bg-learner', 'hover:bg-learner/90', 'focus:ring-learner');
+            
+            // Update login link
+            loginLink.classList.remove('text-educator', 'hover:text-educator/80');
+            loginLink.classList.add('text-learner', 'hover:text-learner/80');
+        }
+    </script>
+</body>
+</html>
