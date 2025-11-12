@@ -237,7 +237,6 @@ See documentation for migration guides.
 - [🏛️ Architecture Overview](All_mds/ARCHITECTURE.md) - System design
 - [✅ Requirements Verification](All_mds/REQUIREMENTS_VERIFICATION.md) - Feature checklist
 - [🔄 Orchestration Tests](All_mds/ORCHESTRATION_TESTS.md) - Testing documentation
-- [📸 Screenshot Guide](All_mds/SCREENSHOT_GUIDE.md) - Documentation capture
 
 ## 🤝 Contributing
 
