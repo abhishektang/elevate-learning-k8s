@@ -50,7 +50,6 @@ A production-ready Learning Management System (LMS) deployed on Kubernetes with 
 | **Container Runtime** | containerd | 2.1.4 |
 | **Orchestration** | K3s | v1.33.5 |
 | **OS** | Ubuntu | 22.04 LTS |
-| **Cloud Provider** | GCP Compute Engine | - |
 
 ## 📋 Prerequisites
 
@@ -224,7 +223,7 @@ kubectl get services -n elevatelearning
 
 This project is **cloud-agnostic** and can be deployed on:
 
-- ✅ **GCP** (Current) - Compute Engine VMs
+- ✅ **GCP** - Compute Engine VMs
 - ✅ **AWS** - EC2 instances with EKS or K3s
 - ✅ **Azure** - Azure VMs with AKS or K3s
 - ✅ **On-Premises** - Any Linux infrastructure
@@ -254,22 +253,7 @@ This is an academic project, but suggestions are welcome!
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Author
-
-**Abhishek Tanguturi**
-- Student ID: s4845110
-- Institution: The University of Queensland
-- Course: INFS7202 - Web Information Systems
-- GitHub: [@abhishektang](https://github.com/abhishektang)
-
-## 🙏 Acknowledgments
-
-- University of Queensland - INFS7202 Course
-- Django Framework Community
-- Kubernetes & K3s Projects
-- Open Source Contributors
-
-## 📞 Support
+##  Support
 
 For issues or questions:
 1. Check the [documentation](All_mds/)
